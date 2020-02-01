@@ -13,9 +13,7 @@ describe("User", () => {
   });
 
   it("should be able to login", async () => {
-    const user = await factory.attrs("User");
-
-    await User.create(user);
+    const user = await factory.create("User");
 
     const response = await request(app)
       .post("/users")
