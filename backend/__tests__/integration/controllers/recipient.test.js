@@ -59,10 +59,21 @@ describe("Recipient", () => {
   });
 
   it("should not allow unauthorized user to update recipients", async () => {
+    const recipient = await factory.create("Recipient");
+
     const response = await request(app)
-      .put("/recipients")
+      .put(`/recipients/${recipient.id}`)
       .send({});
 
     expect(response.status).toBe(401);
+  });
+
+  it("should not be updated when recipient id is not found", async () => {
+    const response = await request(app)
+      .put("/recipients/1")
+      .set("Authorization", `Bearer ${req.token}`)
+      .send({});
+
+    expect(response.status).toBe(400);
   });
 });

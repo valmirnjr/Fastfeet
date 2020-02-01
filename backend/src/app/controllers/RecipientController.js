@@ -10,7 +10,13 @@ class RecipientController {
   async update(req, res) {
     const { id } = req.params;
 
-    const recipient = await Recipient.update(req.body, { where: { id } });
+    const recipient = await Recipient.findByPk(id);
+
+    if (!recipient) {
+      return res.status(400).json({ error: "Recipient not found" });
+    }
+
+    await Recipient.update(req.body, { where: { id } });
 
     return res.json(recipient);
   }
