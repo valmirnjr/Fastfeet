@@ -50,4 +50,20 @@ describe("Recipient", () => {
 
     expect(response.body).toHaveProperty("id");
   });
+
+  it("should not allow registering with a duplicated email", async () => {
+    const deliveryman = await factory.attrs("DeliveryMan");
+
+    await request(app)
+      .post("/deliverymen")
+      .set("Authorization", `Bearer ${req.token}`)
+      .send(deliveryman);
+
+    const response = await request(app)
+      .post("/deliverymen")
+      .set("Authorization", `Bearer ${req.token}`)
+      .send(deliveryman);
+
+    expect(response.body).toHaveProperty("error", "Email already in use");
+  });
 });
