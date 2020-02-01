@@ -3,6 +3,7 @@ import { factory } from "factory-girl";
 
 import User from "../../src/app/models/User";
 import Recipient from "../../src/app/models/Recipient";
+import FactoryMan from "../../src/app/models/FactoryMan";
 
 factory.define("User", User, {
   id: faker.random.number({
@@ -21,6 +22,11 @@ factory.define("Recipient", Recipient, {
   state: faker.address.state(),
   city: faker.address.city(),
   cep: faker.address.zipCode(),
+});
+
+factory.define("FactoryMan", FactoryMan, {
+  name: faker.name.findName(),
+  email: faker.internet.email(),
 });
 
 export default factory;
