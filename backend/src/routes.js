@@ -17,5 +17,6 @@ routes.put("/recipients/:id", RecipientController.update);
 
 routes.get("/deliverymen", DeliveryManController.index);
 routes.post("/deliverymen", DeliveryManController.store);
+routes.put("/deliverymen/:id", DeliveryManController.update);
 
 export default routes;

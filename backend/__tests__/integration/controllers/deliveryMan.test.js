@@ -5,7 +5,7 @@ import truncate from "../../util/truncate";
 
 import factory from "../../util/factories";
 
-describe("Recipient", () => {
+describe("DeliveryMan", () => {
   beforeEach(async () => {
     await truncate();
   });
@@ -65,5 +65,18 @@ describe("Recipient", () => {
       .send(deliveryman);
 
     expect(response.body).toHaveProperty("error", "Email already in use");
+  });
+
+  it("should be able to be updated by admin users", async () => {
+    const deliveryman = await factory.create("DeliveryMan");
+
+    const updatedDeliveryman = await factory.attrs("DeliveryMan");
+
+    const response = await request(app)
+      .put(`/deliverymen/${deliveryman.id}`)
+      .set("Authorization", `Bearer ${req.token}`)
+      .send(updatedDeliveryman);
+
+    expect(response.status).toBe(200);
   });
 });

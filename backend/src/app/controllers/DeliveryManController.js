@@ -19,6 +19,18 @@ class DeliveryManController {
 
     return res.json(deliveryman);
   }
+
+  async update(req, res) {
+    const { id } = req.params;
+
+    const deliveryman = await DeliveryMan.findByPk(id);
+
+    const { name, email } = req.body;
+
+    await deliveryman.update({ name, email });
+
+    return res.json({ name, email });
+  }
 }
 
 export default new DeliveryManController();
