@@ -3,7 +3,7 @@ import { factory } from "factory-girl";
 
 import User from "../../src/app/models/User";
 import Recipient from "../../src/app/models/Recipient";
-import FactoryMan from "../../src/app/models/FactoryMan";
+import DeliveryMan from "../../src/app/models/DeliveryMan";
 
 factory.define("User", User, {
   id: faker.random.number({
@@ -24,7 +24,7 @@ factory.define("Recipient", Recipient, {
   cep: faker.address.zipCode(),
 });
 
-factory.define("FactoryMan", FactoryMan, {
+factory.define("DeliveryMan", DeliveryMan, {
   name: faker.name.findName(),
   email: faker.internet.email(),
 });
