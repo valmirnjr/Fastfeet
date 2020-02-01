@@ -6,6 +6,12 @@ class DeliveryManController {
 
     return res.json(deliverymen);
   }
+
+  async store(req, res) {
+    const deliveryman = await DeliveryMan.create(req.body);
+
+    return res.json(deliveryman);
+  }
 }
 
 export default new DeliveryManController();

@@ -39,4 +39,15 @@ describe("Recipient", () => {
 
     expect(response.status).toBe(401);
   });
+
+  it("should be able to register deliveryman", async () => {
+    const deliveryman = await factory.attrs("DeliveryMan");
+
+    const response = await request(app)
+      .post("/deliverymen")
+      .set("Authorization", `Bearer ${req.token}`)
+      .send(deliveryman);
+
+    expect(response.body).toHaveProperty("id");
+  });
 });
