@@ -2,7 +2,9 @@ import DeliveryMan from "../models/DeliveryMan";
 
 class DeliveryManController {
   async index(req, res) {
-    const deliverymen = await DeliveryMan.findAll();
+    const deliverymen = await DeliveryMan.findAll({
+      attributes: ["id", "name", "email"],
+    });
 
     return res.json(deliverymen);
   }
@@ -30,6 +32,22 @@ class DeliveryManController {
     await deliveryman.update({ name, email });
 
     return res.json({ name, email });
+  }
+
+  async delete(req, res) {
+    const { id } = req.params;
+
+    try {
+      const deliveryman = await DeliveryMan.findByPk(id);
+
+      await deliveryman.destroy();
+
+      return res.json({ success: "Deliveryman was deleted" });
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ error: "Deliveryman could not be deleted" });
+    }
   }
 }
 

@@ -79,4 +79,14 @@ describe("DeliveryMan", () => {
 
     expect(response.status).toBe(200);
   });
+
+  it("should delete a deliveryman by admin users", async () => {
+    const deliveryman = await factory.create("DeliveryMan");
+
+    const response = await request(app)
+      .delete(`/deliverymen/${deliveryman.id}`)
+      .set("Authorization", `Bearer ${req.token}`);
+
+    expect(response.status).toBe(200);
+  });
 });
