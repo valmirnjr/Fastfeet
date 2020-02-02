@@ -80,7 +80,7 @@ describe("DeliveryMan", () => {
     expect(response.status).toBe(200);
   });
 
-  it("should delete a deliveryman by admin users", async () => {
+  it("should delete a deliveryman", async () => {
     const deliveryman = await factory.create("DeliveryMan");
 
     const response = await request(app)
@@ -88,5 +88,13 @@ describe("DeliveryMan", () => {
       .set("Authorization", `Bearer ${req.token}`);
 
     expect(response.status).toBe(200);
+  });
+
+  it("should not be deleted when id is not found", async () => {
+    const response = await request(app)
+      .delete("/deliverymen/1")
+      .set("Authorization", `Bearer ${req.token}`);
+
+    expect(response.status).toBe(400);
   });
 });

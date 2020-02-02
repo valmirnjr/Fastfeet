@@ -40,6 +40,10 @@ class DeliveryManController {
     try {
       const deliveryman = await DeliveryMan.findByPk(id);
 
+      if (!deliveryman) {
+        return res.status(400).json({ error: "Deliveryman not found" });
+      }
+
       await deliveryman.destroy();
 
       return res.json({ success: "Deliveryman was deleted" });
