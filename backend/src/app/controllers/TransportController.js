@@ -1,4 +1,5 @@
 import { Op } from "sequelize";
+
 import Delivery from "../models/Delivery";
 import DeliveryMan from "../models/DeliveryMan";
 
@@ -39,15 +40,19 @@ class TransportController {
 
     const { signature_id, start_date, end_date } = req.body;
 
-    const delivery = await UpdateTransportService.run({
-      delivery_id,
-      deliveryman_id,
-      signature_id,
-      start_date,
-      end_date,
-    });
+    try {
+      const delivery = await UpdateTransportService.run({
+        deliveryman_id,
+        delivery_id,
+        signature_id,
+        start_date,
+        end_date,
+      });
 
-    return res.json(delivery);
+      return res.json(delivery);
+    } catch (err) {
+      return res.status(400).json(err.message);
+    }
   }
 }
 

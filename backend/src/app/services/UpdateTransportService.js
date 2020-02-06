@@ -1,5 +1,8 @@
+import { startOfToday, parseISO } from "date-fns";
+
 import Delivery from "../models/Delivery";
 import DeliveryMan from "../models/DeliveryMan";
+import Withdrawal from "../schemas/Withdrawal";
 
 class CreateDeliveryService {
   async run({
@@ -20,6 +23,25 @@ class CreateDeliveryService {
     if (!delivery) {
       throw new Error("Delivery not found");
     }
+
+    if (delivery.deliveryman_id !== Number(deliveryman_id)) {
+      throw new Error("You can't update this delivery");
+    }
+
+    const withdrawals = await Withdrawal.find({
+      deliveryman_id,
+      createdAt: {
+        $gte: startOfToday(),
+      },
+    });
+
+    if (withdrawals.length >= 5) {
+      throw new Error("You have reached your daily withdrawals max");
+    }
+
+    await Withdrawal.create({
+      deliveryman_id,
+    });
 
     await delivery.update({
       signature_id,

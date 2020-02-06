@@ -24,6 +24,11 @@ routes.get(
   TransportController.index
 );
 
+routes.put(
+  "/deliveryman/:deliverymanId/deliveries/:deliveryId",
+  TransportController.update
+);
+
 routes.use(authMiddleware);
 
 routes.post("/recipients", RecipientController.store);
