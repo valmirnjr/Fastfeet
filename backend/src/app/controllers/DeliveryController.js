@@ -1,6 +1,4 @@
 import Delivery from "../models/Delivery";
-import Recipient from "../models/Recipient";
-import DeliveryMan from "../models/DeliveryMan";
 
 import CreateDeliveryService from "../services/CreateDeliveryService";
 import UpdateDeliveryService from "../services/UpdateDeliveryService";
