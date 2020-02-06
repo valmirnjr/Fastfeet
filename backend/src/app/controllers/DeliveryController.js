@@ -13,6 +13,12 @@ import Recipient from "../models/Recipient";
 import DeliveryMan from "../models/DeliveryMan";
 
 class DeliveryController {
+  async index(req, res) {
+    const deliveries = await Delivery.findAll();
+
+    return res.json(deliveries);
+  }
+
   async store(req, res) {
     const { recipient_id, deliveryman_id, start_date } = req.body;
 
@@ -118,6 +124,24 @@ class DeliveryController {
       start_date,
       end_date,
     });
+  }
+
+  async delete(req, res) {
+    const { id: deliveryId } = req.params;
+
+    try {
+      const delivery = await Delivery.findByPk(deliveryId);
+
+      if (!delivery) {
+        return res.status(400).json({ error: "Delivery not found" });
+      }
+
+      await delivery.destroy();
+
+      return res.json({ success: "Delivery was deleted" });
+    } catch (err) {
+      return res.status(500).json({ error: "Delivery could not be deleted" });
+    }
   }
 }
 
