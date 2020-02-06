@@ -5,31 +5,17 @@ import truncate from "../../util/truncate";
 
 import factory from "../../util/factories";
 
+import User from "../../../src/app/models/User";
+
 describe("DeliveryMan", () => {
   beforeEach(async () => {
     await truncate();
   });
 
-  const req = {
-    token: "",
-  };
-  beforeAll(async () => {
-    const adminUser = await factory.create("User");
-
-    const response = await request(app)
-      .post("/users")
-      .send({
-        email: adminUser.email,
-        password: adminUser.password,
-      });
-
-    req.token = response.body.token;
-  });
-
   it("should list all deliverymen", async () => {
     const response = await request(app)
       .get("/deliverymen")
-      .set("Authorization", `Bearer ${req.token}`);
+      .set("Authorization", `Bearer ${User.generateToken()}`);
 
     expect(response.status).toBe(200);
   });
@@ -45,7 +31,7 @@ describe("DeliveryMan", () => {
 
     const response = await request(app)
       .post("/deliverymen")
-      .set("Authorization", `Bearer ${req.token}`)
+      .set("Authorization", `Bearer ${User.generateToken()}`)
       .send(deliveryman);
 
     expect(response.body).toHaveProperty("id");
@@ -56,12 +42,12 @@ describe("DeliveryMan", () => {
 
     await request(app)
       .post("/deliverymen")
-      .set("Authorization", `Bearer ${req.token}`)
+      .set("Authorization", `Bearer ${User.generateToken()}`)
       .send(deliveryman);
 
     const response = await request(app)
       .post("/deliverymen")
-      .set("Authorization", `Bearer ${req.token}`)
+      .set("Authorization", `Bearer ${User.generateToken()}`)
       .send(deliveryman);
 
     expect(response.body).toHaveProperty("error", "Email already in use");
@@ -74,7 +60,7 @@ describe("DeliveryMan", () => {
 
     const response = await request(app)
       .put(`/deliverymen/${deliveryman.id}`)
-      .set("Authorization", `Bearer ${req.token}`)
+      .set("Authorization", `Bearer ${User.generateToken()}`)
       .send(updatedDeliveryman);
 
     expect(response.status).toBe(200);
@@ -85,7 +71,7 @@ describe("DeliveryMan", () => {
 
     const response = await request(app)
       .delete(`/deliverymen/${deliveryman.id}`)
-      .set("Authorization", `Bearer ${req.token}`);
+      .set("Authorization", `Bearer ${User.generateToken()}`);
 
     expect(response.status).toBe(200);
   });
@@ -93,7 +79,7 @@ describe("DeliveryMan", () => {
   it("should not be deleted when id is not found", async () => {
     const response = await request(app)
       .delete("/deliverymen/1")
-      .set("Authorization", `Bearer ${req.token}`);
+      .set("Authorization", `Bearer ${User.generateToken()}`);
 
     expect(response.status).toBe(400);
   });

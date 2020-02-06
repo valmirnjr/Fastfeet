@@ -5,25 +5,11 @@ import truncate from "../../util/truncate";
 
 import factory from "../../util/factories";
 
+import User from "../../../src/app/models/User";
+
 describe("Recipient", () => {
   beforeEach(async () => {
     await truncate();
-  });
-
-  const req = {
-    token: "",
-  };
-  beforeAll(async () => {
-    const adminUser = await factory.create("User");
-
-    const response = await request(app)
-      .post("/users")
-      .send({
-        email: adminUser.email,
-        password: adminUser.password,
-      });
-
-    req.token = response.body.token;
   });
 
   it("should be able to be registered by admin users", async () => {
@@ -31,7 +17,7 @@ describe("Recipient", () => {
 
     const response = await request(app)
       .post("/recipients")
-      .set("Authorization", `Bearer ${req.token}`)
+      .set("Authorization", `Bearer ${User.generateToken()}`)
       .send(recipient);
 
     expect(response.body).toHaveProperty("id");
@@ -44,13 +30,13 @@ describe("Recipient", () => {
 
     const response = await request(app)
       .put(`/recipients/${recipient.id}`)
-      .set("Authorization", `Bearer ${req.token}`)
+      .set("Authorization", `Bearer ${User.generateToken()}`)
       .send(updatedRecipient);
 
     expect(response.status).toBe(200);
   });
 
-  it("should not allow unauthorized user to create recipients", async () => {
+  it("should not be registered by unauthorized users", async () => {
     const response = await request(app)
       .post("/recipients")
       .send({});
@@ -58,7 +44,7 @@ describe("Recipient", () => {
     expect(response.status).toBe(401);
   });
 
-  it("should not allow unauthorized user to update recipients", async () => {
+  it("should not be updated by unauthorized users", async () => {
     const recipient = await factory.create("Recipient");
 
     const response = await request(app)
@@ -68,10 +54,10 @@ describe("Recipient", () => {
     expect(response.status).toBe(401);
   });
 
-  it("should not be updated when recipient id is not found", async () => {
+  it("should not be updated when its id is not found", async () => {
     const response = await request(app)
       .put("/recipients/1")
-      .set("Authorization", `Bearer ${req.token}`)
+      .set("Authorization", `Bearer ${User.generateToken()}`)
       .send({});
 
     expect(response.status).toBe(400);
