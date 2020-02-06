@@ -16,9 +16,16 @@ class RecipientController {
       return res.status(400).json({ error: "Recipient not found" });
     }
 
-    await Recipient.update(req.body, { where: { id } });
+    const { name, street, number } = await Recipient.update(req.body, {
+      where: { id },
+    });
 
-    return res.json(recipient);
+    return res.json({
+      id,
+      name,
+      street,
+      number,
+    });
   }
 }
 
