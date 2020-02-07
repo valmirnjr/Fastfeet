@@ -8,7 +8,6 @@ import DeliveryManController from "./app/controllers/DeliveryManController";
 import FileController from "./app/controllers/FileController";
 import DeliveryController from "./app/controllers/DeliveryController";
 import TransportController from "./app/controllers/TransportController";
-import SignatureController from "./app/controllers/SignatureController";
 
 import validateStartDate from "./app/validators/DateCheck";
 
@@ -32,7 +31,7 @@ routes.put(
 routes.post(
   "/deliveryman/:deliverymanId/deliveries/:deliveryId/signature",
   upload.single("file"),
-  SignatureController.store
+  TransportController.store
 );
 
 routes.use(authMiddleware);
