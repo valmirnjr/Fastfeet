@@ -4,7 +4,7 @@ import Delivery from "../models/Delivery";
 import DeliveryMan from "../models/DeliveryMan";
 import File from "../models/File";
 
-import UpdateTransportService from "../services/UpdateTransportService";
+import TransportService from "../services/TransportService";
 
 class TransportController {
   async index(req, res) {
@@ -46,7 +46,7 @@ class TransportController {
       path,
     });
 
-    const delivery = await UpdateTransportService.run({
+    const delivery = await TransportService.run({
       deliveryman_id,
       delivery_id,
       signature_id: file.id,
@@ -65,7 +65,7 @@ class TransportController {
     const { signature_id, start_date, end_date } = req.body;
 
     try {
-      const delivery = await UpdateTransportService.run({
+      const delivery = await TransportService.run({
         deliveryman_id,
         delivery_id,
         signature_id,

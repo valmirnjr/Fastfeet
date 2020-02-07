@@ -1,10 +1,10 @@
-import { startOfToday, parseISO } from "date-fns";
+import { startOfToday } from "date-fns";
 
 import Delivery from "../models/Delivery";
 import DeliveryMan from "../models/DeliveryMan";
 import Withdrawal from "../schemas/Withdrawal";
 
-class UpdateTransportService {
+class TransportService {
   async run({
     deliveryman_id,
     delivery_id,
@@ -64,4 +64,4 @@ class UpdateTransportService {
   }
 }
 
-export default new UpdateTransportService();
+export default new TransportService();
