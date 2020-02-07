@@ -10,7 +10,7 @@ class CreateDeliveryService {
       throw new Error("Recipient not found");
     }
 
-    const deliveryman = DeliveryMan.findByPk(deliveryman_id);
+    const deliveryman = await DeliveryMan.findByPk(deliveryman_id);
 
     if (!deliveryman) {
       throw new Error("Deliveryman not found");
@@ -22,7 +22,18 @@ class CreateDeliveryService {
       product,
     });
 
-    return delivery;
+    return {
+      id: delivery.id,
+      deliveryman_id,
+      recipient_id,
+      product: delivery.product,
+
+      deliveryman: {
+        id: deliveryman.id,
+        name: deliveryman.name,
+        email: deliveryman.email,
+      },
+    };
   }
 }
 

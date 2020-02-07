@@ -3,6 +3,8 @@ import Delivery from "../models/Delivery";
 import CreateDeliveryService from "../services/CreateDeliveryService";
 import UpdateDeliveryService from "../services/UpdateDeliveryService";
 
+import Mail from "../../lib/Mail";
+
 class DeliveryController {
   async index(req, res) {
     const deliveries = await Delivery.findAll();
@@ -17,6 +19,12 @@ class DeliveryController {
       recipient_id,
       deliveryman_id,
       product,
+    });
+
+    await Mail.sendMail({
+      to: `${delivery.deliveryman.name} <${delivery.deliveryman.email}>`,
+      subject: "Nova entrega",
+      text: "Você tem uma nova entrega",
     });
 
     return res.json(delivery);

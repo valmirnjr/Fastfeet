@@ -4,7 +4,7 @@ import Delivery from "../models/Delivery";
 import DeliveryMan from "../models/DeliveryMan";
 import Withdrawal from "../schemas/Withdrawal";
 
-class CreateDeliveryService {
+class UpdateTransportService {
   async run({
     deliveryman_id,
     delivery_id,
@@ -28,20 +28,22 @@ class CreateDeliveryService {
       throw new Error("You can't update this delivery");
     }
 
-    const withdrawals = await Withdrawal.find({
-      deliveryman_id,
-      createdAt: {
-        $gte: startOfToday(),
-      },
-    });
+    if (signature_id === null) {
+      const withdrawals = await Withdrawal.find({
+        deliveryman_id,
+        createdAt: {
+          $gte: startOfToday(),
+        },
+      });
 
-    if (withdrawals.length >= 5) {
-      throw new Error("You have reached your daily withdrawals max");
+      if (withdrawals.length >= 5) {
+        throw new Error("You have reached your daily withdrawals max");
+      }
+
+      await Withdrawal.create({
+        deliveryman_id,
+      });
     }
-
-    await Withdrawal.create({
-      deliveryman_id,
-    });
 
     await delivery.update({
       signature_id,
@@ -56,10 +58,10 @@ class CreateDeliveryService {
       signature_id,
       product: delivery.product,
       canceled_at: delivery.canceled_at,
-      start_date,
+      start_date: start_date || delivery.start_date,
       end_date,
     };
   }
 }
 
-export default new CreateDeliveryService();
+export default new UpdateTransportService();
