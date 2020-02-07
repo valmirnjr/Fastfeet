@@ -28,6 +28,15 @@ class CreateDeliveryService {
       recipient_id,
       product: delivery.product,
 
+      recipient: {
+        street: recipient.street,
+        number: recipient.number,
+        complement: recipient.complement,
+        city: recipient.city,
+        state: recipient.state,
+        cep: recipient.cep,
+      },
+
       deliveryman: {
         id: deliveryman.id,
         name: deliveryman.name,

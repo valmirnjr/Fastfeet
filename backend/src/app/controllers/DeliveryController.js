@@ -3,7 +3,8 @@ import Delivery from "../models/Delivery";
 import CreateDeliveryService from "../services/CreateDeliveryService";
 import UpdateDeliveryService from "../services/UpdateDeliveryService";
 
-import Mail from "../../lib/Mail";
+import NewDeliveryMail from "../jobs/NewDeliveryMail";
+import Queue from "../../lib/Queue";
 
 class DeliveryController {
   async index(req, res) {
@@ -21,10 +22,8 @@ class DeliveryController {
       product,
     });
 
-    await Mail.sendMail({
-      to: `${delivery.deliveryman.name} <${delivery.deliveryman.email}>`,
-      subject: "Nova entrega",
-      text: "Você tem uma nova entrega",
+    await Queue.add(NewDeliveryMail.key, {
+      delivery,
     });
 
     return res.json(delivery);
