@@ -34,26 +34,22 @@ class TransportController {
   }
 
   async store(req, res) {
-    const { originalname: name, filename: path } = req.file;
-
     const {
       deliverymanId: deliveryman_id,
       deliveryId: delivery_id,
     } = req.params;
 
-    const file = await File.create({
-      name,
-      path,
-    });
+    try {
+      const delivery = await TransportService.run({
+        deliveryman_id,
+        delivery_id,
+        start_date: new Date(),
+      });
 
-    const delivery = await TransportService.run({
-      deliveryman_id,
-      delivery_id,
-      signature_id: file.id,
-      end_date: new Date(),
-    });
-
-    return res.json(delivery);
+      return res.json(delivery);
+    } catch (err) {
+      return res.status(400).json(err.message);
+    }
   }
 
   async update(req, res) {
@@ -62,21 +58,29 @@ class TransportController {
       deliveryId: delivery_id,
     } = req.params;
 
-    const { signature_id, start_date, end_date } = req.body;
+    if (req.file) {
+      const { originalname: name, filename: path } = req.file;
 
-    try {
+      const file = await File.create({ name, path });
+
       const delivery = await TransportService.run({
         deliveryman_id,
         delivery_id,
-        signature_id,
-        start_date,
-        end_date,
+        signature_id: file.id,
+        end_date: new Date(),
       });
 
       return res.json(delivery);
-    } catch (err) {
-      return res.status(400).json(err.message);
     }
+
+    // If no file was sent, it means the deliveryman only wants to update de start_date
+    const delivery = await TransportService.run({
+      deliveryman_id,
+      delivery_id,
+      start_date: new Date(),
+    });
+
+    return res.json(delivery);
   }
 }
 

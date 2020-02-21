@@ -8,9 +8,9 @@ class TransportService {
   async run({
     deliveryman_id,
     delivery_id,
-    signature_id,
+    signature_id = null,
     start_date,
-    end_date,
+    end_date = null,
   }) {
     const deliveryman = await DeliveryMan.findByPk(deliveryman_id);
 
@@ -25,7 +25,7 @@ class TransportService {
     }
 
     if (delivery.deliveryman_id !== Number(deliveryman_id)) {
-      throw new Error("You can't update this delivery");
+      throw new Error("This delivery is assigned to another deliveryman");
     }
 
     if (signature_id === null) {

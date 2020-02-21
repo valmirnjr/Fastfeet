@@ -8,6 +8,7 @@ import DeliveryManController from "./app/controllers/DeliveryManController";
 import FileController from "./app/controllers/FileController";
 import DeliveryController from "./app/controllers/DeliveryController";
 import TransportController from "./app/controllers/TransportController";
+import DeliveryProblemController from "./app/controllers/DeliveryProblemController";
 
 import validateStartDate from "./app/validators/DateCheck";
 
@@ -18,21 +19,22 @@ const upload = multer(multerConfig);
 
 routes.post("/users", SessionController.store);
 
-routes.get(
-  "/deliveryman/:id/deliveries",
-  validateStartDate,
-  TransportController.index
-);
-routes.put(
+routes.get("/deliveryman/:id/deliveries", TransportController.index);
+
+// Deliveryman is taking a new delivery to make
+routes.post(
   "/deliveryman/:deliverymanId/deliveries/:deliveryId",
+  validateStartDate,
+  TransportController.store
+);
+
+routes.put(
+  "/deliveryman/:deliverymanId/deliveries/:deliveryId/signature",
+  upload.single("file"),
   TransportController.update
 );
 
-routes.post(
-  "/deliveryman/:deliverymanId/deliveries/:deliveryId/signature",
-  upload.single("file"),
-  TransportController.store
-);
+routes.post("/delivery/:deliveryId/problems", DeliveryProblemController.store);
 
 routes.use(authMiddleware);
 
@@ -52,4 +54,10 @@ routes.post("/deliveries", DeliveryController.store);
 routes.put("/deliveries/:id", DeliveryController.update);
 routes.delete("/deliveries/:id", DeliveryController.delete);
 
+routes.get("/delivery/problems", DeliveryProblemController.index);
+routes.get("/delivery/:deliveryId/problems", DeliveryProblemController.index);
+routes.delete(
+  "/delivery/:problemId/problems",
+  DeliveryProblemController.delete
+);
 export default routes;

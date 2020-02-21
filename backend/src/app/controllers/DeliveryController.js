@@ -1,3 +1,5 @@
+import { Op } from "sequelize";
+
 import Delivery from "../models/Delivery";
 
 import CreateDeliveryService from "../services/CreateDeliveryService";
@@ -8,7 +10,15 @@ import Queue from "../../lib/Queue";
 
 class DeliveryController {
   async index(req, res) {
-    const deliveries = await Delivery.findAll();
+    const { product } = req.query;
+
+    const filterOptions = {
+      where: {
+        product: product ? { [Op.iLike]: `%${product}%` } : { [Op.ne]: null },
+      },
+    };
+
+    const deliveries = await Delivery.findAll(filterOptions);
 
     return res.json(deliveries);
   }
